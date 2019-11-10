@@ -60,8 +60,6 @@ class Accommodation
      */
     private $availability;
 
-    private $reputationBadge;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +72,17 @@ class Accommodation
 
     public function setName(string $name): self
     {
+        if (strlen($name) <= 10) {
+            throw new Exception("The accommodation name should be longer than 10 characters.");
+        }
+
+        $forbidenWords =  ["Free", "Offer", "Book", "Website"];
+        foreach ($forbidenWords as $word) {
+            if (stripos($name, $word) > -1) {
+                throw new Exception("Was not possible set accommodation name because '$name' is a forbiden word.");
+            }
+        }
+
         $this->name = $name;
 
         return $this;
@@ -181,7 +190,7 @@ class Accommodation
 
     public function getReputationBadge(): ReputationBadge
     {
-        if($this->reputation == null){
+        if ($this->reputation == null) {
             throw new Exception("The reputation is null");
         }
 

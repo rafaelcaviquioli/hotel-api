@@ -24,7 +24,6 @@ class AccommodationTest extends TestCase
         $rating = 6;
         $accommodation = new Accommodation();
         $accommodation->setEvaluate($rating);
-        $this->assertNull($accommodation->getRating());
     }
 
     public function testSetEvaluate_ShouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
@@ -34,7 +33,6 @@ class AccommodationTest extends TestCase
         $rating = -1;
         $accommodation = new Accommodation();
         $accommodation->setEvaluate($rating);
-        $this->assertNull($accommodation->getRating());
     }
 
     public function testSetCategory_ShouldThrowException_WhenCategorySettedIsNotValid()
@@ -43,7 +41,6 @@ class AccommodationTest extends TestCase
 
         $accommodation = new Accommodation();
         $accommodation->setCategory("nonExistentCategory");
-        $this->assertNull($accommodation->getCategory());
     }
 
     public function testSetCategory_ShouldSetCategory_WhenCategorySettedIsValid()
@@ -60,7 +57,6 @@ class AccommodationTest extends TestCase
 
         $accommodation = new Accommodation();
         $accommodation->setImage("thisIsNotAnUrl");
-        $this->assertNull($accommodation->getImage());
     }
 
     public function testSetImage_ShouldSetImageUrl_WhenItIsAValidUrl()
@@ -86,7 +82,6 @@ class AccommodationTest extends TestCase
         $reputation = 1001;
         $accommodation = new Accommodation();
         $accommodation->setReputation($reputation);
-        $this->assertNull($accommodation->getReputation());
     }
 
     public function testSetReputation_ShouldThrowException_WhenReputationIsLesserThenZero()
@@ -96,7 +91,6 @@ class AccommodationTest extends TestCase
         $reputation = -1;
         $accommodation = new Accommodation();
         $accommodation->setReputation($reputation);
-        $this->assertNull($accommodation->getReputation());
     }
 
     public function testGetReputationBadge_ShouldReturnRedColor_WhenReputationIsLesserOrEqualThen500()
@@ -137,5 +131,32 @@ class AccommodationTest extends TestCase
         $this->expectException(Exception::class);
         $accommodation = new Accommodation();
         $this->assertNull($accommodation->getReputationBadge());
+    }
+
+    public function testSetName_ShouldThrowException_WhenHaveForbiddenWordsLikeFree(){
+        $this->expectException(Exception::class);
+        $accommodation = new Accommodation();
+        $accommodation->setName("A great accommodation with free wifi");
+    }
+
+    public function testSetName_ShouldThrowException_WhenHaveNotForbiddenWordsLikeOffer(){
+        $this->expectException(Exception::class);
+        $accommodation = new Accommodation();
+        $accommodation->setName("This is a good offer near of the beach");
+    }
+
+    public function testSetName_ShouldSetHotelName_WhenHaveNotForbiddenWord(){
+        $name = "The sprint tower";
+        $accommodation = new Accommodation();
+        $accommodation->setName($name);
+        $this->assertEquals($name, $accommodation->getName());
+    }
+
+    public function testSetName_ShouldThrowException_WhenNameIsNotLongerThan10Characters(){
+        $this->expectException(Exception::class);
+        $accommodation = new Accommodation();
+
+        $nameWithNineCharacteres = "Hyatt Rege";
+        $accommodation->setName($nameWithNineCharacteres);
     }
 }
