@@ -2,7 +2,7 @@
 
 namespace App\Tests\Entity;
 
-use App\Api\Exception\BusinessRuleException;
+use Exception;
 use App\Domain\Constant\Category;
 use App\Domain\Entity\Accommodation;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class AccommodationTest extends TestCase
 
     public function testSetEvaluate_ShouldNotEvaluateAndThrowException_WhenRatingIsBiggerThenFive()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $rating = 6;
         $accommodation = new Accommodation();
@@ -29,7 +29,7 @@ class AccommodationTest extends TestCase
 
     public function testSetEvaluate_ShouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $rating = -1;
         $accommodation = new Accommodation();
@@ -39,7 +39,7 @@ class AccommodationTest extends TestCase
 
     public function testSetCategory_ShouldThrowException_WhenCategorySettedIsNotValid()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $accommodation = new Accommodation();
         $accommodation->setCategory("nonExistentCategory");
@@ -56,7 +56,7 @@ class AccommodationTest extends TestCase
 
     public function testSetImage_ShouldThrowException_WhenImageIsNotAValidUrl()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $accommodation = new Accommodation();
         $accommodation->setImage("thisIsNotAnUrl");
@@ -81,7 +81,7 @@ class AccommodationTest extends TestCase
 
     public function testSetReputation_ShouldThrowException_WhenReputationIsBiggerThenOneThousand()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $reputation = 1001;
         $accommodation = new Accommodation();
@@ -91,7 +91,7 @@ class AccommodationTest extends TestCase
 
     public function testSetReputation_ShouldThrowException_WhenReputationIsLesserThenZero()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
 
         $reputation = -1;
         $accommodation = new Accommodation();
@@ -134,7 +134,7 @@ class AccommodationTest extends TestCase
 
     public function testGetReputationBadge_ShouldThrowException_WhenReputationIsNull()
     {
-        $this->expectException(BusinessRuleException::class);
+        $this->expectException(Exception::class);
         $accommodation = new Accommodation();
         $this->assertNull($accommodation->getReputationBadge());
     }

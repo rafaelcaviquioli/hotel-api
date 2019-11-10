@@ -2,8 +2,8 @@
 
 namespace App\Domain\Entity;
 
+use Exception;
 use Doctrine\ORM\Mapping as ORM;
-use App\Api\Exception\BusinessRuleException;
 use App\Domain\Constant\Category;
 use App\Domain\ObjectValue\ReputationBadge;
 
@@ -138,7 +138,7 @@ class Accommodation
     public function setImage(string $imageUrl): self
     {
         if (filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
-            throw new BusinessRuleException("The image url '$imageUrl' is not a valid URL");
+            throw new Exception("The image url '$imageUrl' is not a valid URL");
         }
 
         $this->image = $imageUrl;
@@ -149,7 +149,7 @@ class Accommodation
     public function setCategory($category): self
     {
         if (!Category::validateCategory($category)) {
-            throw new BusinessRuleException("The category '$category' is invalid");
+            throw new Exception("The category '$category' is invalid");
         }
 
         $this->category = $category;
@@ -160,7 +160,7 @@ class Accommodation
     public function setEvaluate(int $rating): self
     {
         if ($rating < 0 || $rating > 5) {
-            throw new BusinessRuleException("The evaluate rating is invalid");
+            throw new Exception("The evaluate rating is invalid");
         }
 
         $this->rating = $rating;
@@ -171,7 +171,7 @@ class Accommodation
     public function setReputation(int $reputation): self
     {
         if ($reputation < 0 || $reputation > 1000) {
-            throw new BusinessRuleException("The reputation is invalid");
+            throw new Exception("The reputation is invalid");
         }
 
         $this->reputation = $reputation;
@@ -182,7 +182,7 @@ class Accommodation
     public function getReputationBadge(): ReputationBadge
     {
         if($this->reputation == null){
-            throw new BusinessRuleException("The reputation is null");
+            throw new Exception("The reputation is null");
         }
 
         return new ReputationBadge($this->reputation);

@@ -2,7 +2,7 @@
 
 namespace App\Domain\ObjectValue;
 
-use PHPUnit\Runner\Exception;
+use Exception;
 
 class ReputationBadge
 {
