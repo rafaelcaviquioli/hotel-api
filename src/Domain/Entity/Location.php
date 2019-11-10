@@ -3,6 +3,7 @@
 namespace App\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 /**
  * @ORM\Entity()
@@ -100,6 +101,10 @@ class Location
 
     public function setZipCode(int $zipCode): self
     {
+        if (strlen($zipCode) != 5) {
+            throw new Exception("The zipCode '$zipCode' is invalid.");
+        }
+
         $this->zipCode = $zipCode;
 
         return $this;
