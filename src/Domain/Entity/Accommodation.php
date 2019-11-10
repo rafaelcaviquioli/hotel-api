@@ -101,13 +101,6 @@ class Accommodation
         return $this->image;
     }
 
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
     public function getReputation(): ?int
     {
         return $this->reputation;
@@ -149,6 +142,17 @@ class Accommodation
         return $this->category;
     }
 
+    public function setImage(string $imageUrl): self
+    {
+        if (filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
+            throw new BusinessRuleException("The image url '$imageUrl' is not a valid URL");
+        }
+
+        $this->image = $imageUrl;
+
+        return $this;
+    }
+
     public function setCategory($category): self
     {
         if (!Category::validateCategory($category)) {
@@ -160,12 +164,14 @@ class Accommodation
         return $this;
     }
 
-    public function evaluate(int $rating): void
+    public function setEvaluate(int $rating): self
     {
         if ($rating < 0 || $rating > 5) {
             throw new BusinessRuleException("The evaluate rating is invalid");
         }
 
         $this->rating = $rating;
+
+        return $this;
     }
 }
