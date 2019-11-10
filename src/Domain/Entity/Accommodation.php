@@ -5,6 +5,7 @@ namespace App\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Api\Exception\BusinessRuleException;
 use App\Domain\Constant\Category;
+use App\Domain\ObjectValue\ReputationBadge;
 
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\Repository\AccommodationRepository")
@@ -59,8 +60,7 @@ class Accommodation
      */
     private $availability;
 
-    public function __construct()
-    { }
+    private $reputationBadge;
 
     public function getId(): ?int
     {
@@ -104,13 +104,6 @@ class Accommodation
     public function getReputation(): ?int
     {
         return $this->reputation;
-    }
-
-    public function setReputation(int $reputation): self
-    {
-        $this->reputation = $reputation;
-
-        return $this;
     }
 
     public function getPrice(): ?int
@@ -173,5 +166,25 @@ class Accommodation
         $this->rating = $rating;
 
         return $this;
+    }
+
+    public function setReputation(int $reputation): self
+    {
+        if ($reputation < 0 || $reputation > 1000) {
+            throw new BusinessRuleException("The reputation is invalid");
+        }
+
+        $this->reputation = $reputation;
+
+        return $this;
+    }
+
+    public function getReputationBadge(): ReputationBadge
+    {
+        if($this->reputation == null){
+            throw new BusinessRuleException("The reputation is null");
+        }
+
+        return new ReputationBadge($this->reputation);
     }
 }
