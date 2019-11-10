@@ -4,6 +4,7 @@ namespace App\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Api\Exception\BusinessRuleException;
+use App\Domain\Constant\Category;
 
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\Repository\AccommodationRepository")
@@ -148,7 +149,18 @@ class Accommodation
         return $this->category;
     }
 
-    public function evaluate(int $rating)
+    public function setCategory($category): self
+    {
+        if (!Category::validateCategory($category)) {
+            throw new BusinessRuleException("The category '$category' is invalid");
+        }
+
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function evaluate(int $rating): void
     {
         if ($rating < 0 || $rating > 5) {
             throw new BusinessRuleException("The evaluate rating is invalid");

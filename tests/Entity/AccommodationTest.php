@@ -15,6 +15,7 @@ class AccommodationTest extends TestCase
         $accommodation->evaluate($rating);
         $this->assertEquals($rating, $accommodation->getRating());
     }
+
     public function testEvaluate_shouldNotEvaluateAndThrowException_WhenRatingIsBiggerThenFive()
     {
         $this->expectException(BusinessRuleException::class);
@@ -24,6 +25,7 @@ class AccommodationTest extends TestCase
         $accommodation->evaluate($rating);
         $this->assertNull($accommodation->getRating());
     }
+
     public function testEvaluate_shouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
     {
         $this->expectException(BusinessRuleException::class);
@@ -32,5 +34,14 @@ class AccommodationTest extends TestCase
         $accommodation = new Accommodation();
         $accommodation->evaluate($rating);
         $this->assertNull($accommodation->getRating());
+    }
+
+    public function testSetCategory_shouldThrowException_WhenCategorySettedIsNotValid()
+    {
+        $this->expectException(BusinessRuleException::class);
+
+        $accommodation = new Accommodation();
+        $accommodation->setCategory("nonExistentCategory");
+        $this->assertNull($accommodation->getCategory());
     }
 }
