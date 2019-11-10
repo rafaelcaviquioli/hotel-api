@@ -4,6 +4,12 @@
 docker-compose up -d
 ```
 
+#### Run unit tests
+
+```bash
+$ docker-compose run php-fpm php bin/phpunit
+```
+
 #### Open php-fpm console
 
 ```bash
