@@ -23,6 +23,11 @@ class Accommodation
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $category;
+
+    /**
      * @ORM\Column(type="smallint")
      */
     private $rating;
@@ -53,12 +58,6 @@ class Accommodation
      */
     private $availability;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Domain\Entity\Category")
-     * @ORM\JoinColumn(nullable=false, name="category_id", referencedColumnName="id")
-     */
-    private $Category;
-
     public function __construct()
     { }
 
@@ -82,13 +81,6 @@ class Accommodation
     public function getRating(): ?int
     {
         return $this->rating;
-    }
-
-    public function setRating(int $rating): self
-    {
-        $this->rating = $rating;
-
-        return $this;
     }
 
     public function getLocation(): ?Location
@@ -151,16 +143,9 @@ class Accommodation
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory()
     {
-        return $this->Category;
-    }
-
-    public function setCategory(?Category $Category): self
-    {
-        $this->Category = $Category;
-
-        return $this;
+        return $this->category;
     }
 
     public function evaluate(int $rating)
