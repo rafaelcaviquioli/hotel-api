@@ -2,7 +2,7 @@
 
 namespace App\Domain\Entity;
 
-use Exception;
+use App\CrossCutting\Exception\ValidationEntityException;
 use Doctrine\ORM\Mapping as ORM;
 use App\Domain\Constant\Category;
 use App\Domain\ObjectValue\ReputationBadge;
@@ -73,13 +73,13 @@ class Accommodation
     public function setName(string $name): self
     {
         if (strlen($name) <= 10) {
-            throw new Exception("The accommodation name should be longer than 10 characters.");
+            throw new ValidationEntityException("The accommodation name should be longer than 10 characters.");
         }
 
         $forbidenWords =  ["Free", "Offer", "Book", "Website"];
         foreach ($forbidenWords as $word) {
             if (stripos($name, $word) > -1) {
-                throw new Exception("Was not possible set accommodation name because '$name' is a forbiden word.");
+                throw new ValidationEntityException("Was not possible set accommodation name because '$name' is a forbiden word.");
             }
         }
 
@@ -147,7 +147,7 @@ class Accommodation
     public function setImage(string $imageUrl): self
     {
         if (filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
-            throw new Exception("The image url '$imageUrl' is not a valid URL");
+            throw new ValidationEntityException("The image url '$imageUrl' is not a valid URL");
         }
 
         $this->image = $imageUrl;
@@ -158,7 +158,7 @@ class Accommodation
     public function setCategory($category): self
     {
         if (!Category::validateCategory($category)) {
-            throw new Exception("The category '$category' is invalid");
+            throw new ValidationEntityException("The category '$category' is invalid");
         }
 
         $this->category = $category;
@@ -169,7 +169,7 @@ class Accommodation
     public function setEvaluate(int $rating): self
     {
         if ($rating < 0 || $rating > 5) {
-            throw new Exception("The evaluate rating is invalid");
+            throw new ValidationEntityException("The evaluate rating is invalid");
         }
 
         $this->rating = $rating;
@@ -180,7 +180,7 @@ class Accommodation
     public function setReputation(int $reputation): self
     {
         if ($reputation < 0 || $reputation > 1000) {
-            throw new Exception("The reputation is invalid");
+            throw new ValidationEntityException("The reputation is invalid");
         }
 
         $this->reputation = $reputation;
@@ -191,7 +191,7 @@ class Accommodation
     public function getReputationBadge(): ReputationBadge
     {
         if ($this->reputation == null) {
-            throw new Exception("The reputation is null");
+            throw new ValidationEntityException("The reputation is null");
         }
 
         return new ReputationBadge($this->reputation);

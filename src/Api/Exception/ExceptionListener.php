@@ -18,11 +18,17 @@ class ExceptionListener
 
         $responseData = [
             'code' => $exception->getCode(),
-            'message' => $exception->getMessage()
+            'message' => $exception->getMessage(),
+            'exceptionName' => self::getClassName($exception),
         ];
+        $response = new JsonResponse($responseData, $exception->getCode());
 
-        $event->setResponse(
-            new JsonResponse($responseData, $responseData['code'])
-        );
+        $event->setResponse($response);
+    }
+
+    private static function getClassName(object $class): string
+    {
+        $explodeNameSpace = explode("\\", get_class($class));
+        return end($explodeNameSpace);
     }
 }
