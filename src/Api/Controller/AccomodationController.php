@@ -2,14 +2,13 @@
 
 namespace App\Api\Controller;
 
+use App\CrossCutting\Exception\ResourceNotFoundException;
+use App\CrossCutting\Exception\NoContentException;
 use App\Application\ViewModel\AccommodationViewModel;
-use App\Domain\Constant\Category;
-use App\Domain\Entity\Accommodation;
 use App\Infrastructure\Repository\AccommodationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use App\Domain\Entity\Location;
 
 class AccomodationController extends AbstractController
 {
@@ -26,9 +25,13 @@ class AccomodationController extends AbstractController
     public function getAccommodation($id): Response
     {
         $accommodation = $this->accommodationRepository->findOneById($id);
+
+        if ($accommodation == null) {
+            throw new ResourceNotFoundException();
+        }
         $viewModel = new AccommodationViewModel();
         $viewModel->parseOne($accommodation);
-        
+
         return $this->json($viewModel);
     }
 
@@ -38,6 +41,11 @@ class AccomodationController extends AbstractController
     public function getAccommodations(): Response
     {
         $accommodations = $this->accommodationRepository->findAll();
+
+        if ($accommodations == null) {
+            throw new NoContentException();
+        }
+
         $viewModels = AccommodationViewModel::parseList($accommodations);
 
         return $this->json($viewModels);

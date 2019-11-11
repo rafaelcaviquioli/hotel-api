@@ -25,3 +25,8 @@ services:
 
     App\Infrastructure\Repository\:
         resource: ../src/Infrastructure/Repository
+
+    published_message.listener:
+        class: App\Api\Exception\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

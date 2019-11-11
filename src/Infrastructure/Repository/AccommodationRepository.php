@@ -38,4 +38,10 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function insert(Accommodation $accommodation)
+    {
+        $this->_em->persist($accommodation);
+        $this->_em->flush();
+    }
 }
