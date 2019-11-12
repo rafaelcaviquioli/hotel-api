@@ -8,6 +8,7 @@ use App\Application\ViewModel\AccommodationViewModel;
 use App\Application\ViewModel\AccommodationPayload;
 use App\Domain\Entity\Accommodation;
 use App\Domain\Entity\Location;
+use App\Domain\Service\AccommodationService;
 use App\Infrastructure\Repository\AccommodationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,14 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 class AccomodationController extends AbstractController
 {
     private $accommodationRepository;
+    private $accommodationService;
 
-    public function __construct(AccommodationRepository $accommodationRepository)
-    {
+    public function __construct(
+        AccommodationRepository $accommodationRepository,
+        AccommodationService $accommodationService
+    ) {
         $this->accommodationRepository = $accommodationRepository;
+        $this->accommodationService = $accommodationService;
     }
 
     /**
@@ -75,34 +80,13 @@ class AccomodationController extends AbstractController
      *     @Model(type=AccommodationViewModel::class)
      * )
      * */
-    public function insert(Request $request)
+    public function createAccommodation(Request $request)
     {
         $content = json_decode($request->getContent(), true);
 
-        $location = new Location();
-        $location
-            ->setCity($content["location"]["city"])
-            ->setState($content["location"]["state"])
-            ->setCountry($content["location"]["country"])
-            ->setAddress($content["location"]["address"])
-            ->setZipCode((int) $content["location"]["zip_code"]);
+        $accommodationViewModel = $this->accommodationService
+            ->createAccommodation($content);
 
-        $accommodation = new Accommodation();
-        $accommodation
-            ->setName($content["name"])
-            ->setCategory($content["category"])
-            ->setLocation($location)
-            ->setPrice((int) $content["price"])
-            ->setAvailability((int) $content["availability"])
-            ->setImage($content["image"])
-            ->setReputation((int) $content["reputation"])
-            ->setRating((int) $content["rating"]);
-
-        $this->accommodationRepository->insert($accommodation);
-
-        $viewModel = new AccommodationViewModel();
-        $viewModel->parseOne($accommodation);
-
-        return $this->json($viewModel, Response::HTTP_CREATED);
+        return $this->json($accommodationViewModel, Response::HTTP_CREATED);
     }
 }

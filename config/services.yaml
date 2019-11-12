@@ -26,6 +26,9 @@ services:
     App\Infrastructure\Repository\:
         resource: ../src/Infrastructure/Repository
 
+    App\Domain\Service\:
+        resource: ../src/Domain/Service
+
     published_message.listener:
         class: App\Api\Exception\ExceptionListener
         tags:
