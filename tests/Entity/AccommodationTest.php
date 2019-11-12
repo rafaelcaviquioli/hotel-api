@@ -5,6 +5,7 @@ namespace App\Tests\Entity;
 use Exception;
 use App\Domain\Constant\Category;
 use App\Domain\Entity\Accommodation;
+use App\Domain\ObjectValue\ReputationBadge;
 use PHPUnit\Framework\TestCase;
 
 class AccommodationTest extends TestCase
@@ -93,37 +94,13 @@ class AccommodationTest extends TestCase
         $accommodation->setReputation($reputation);
     }
 
-    public function testGetReputationBadge_ShouldReturnRedColor_WhenReputationIsLesserOrEqualThen500()
+    public function  testGetReputationBadge_ShouldReturnAReputationBadge_WhenReputationHasAValidValue()
     {
+        $reputation = 3;
         $accommodation = new Accommodation();
+        $accommodation->setReputation($reputation);
 
-        $accommodation->setReputation(500);
-        $this->assertEquals("red", $accommodation->getReputationBadge()->__toString());
-
-        $accommodation->setReputation(250);
-        $this->assertEquals("red", $accommodation->getReputationBadge()->__toString());
-    }
-
-    public function testGetReputationBadge_ShouldReturnYellowColor_WhenReputationIsBiggerThen501AndLesserOrEqualThen799()
-    {
-        $accommodation = new Accommodation();
-
-        $accommodation->setReputation(501);
-        $this->assertEquals("yellow", $accommodation->getReputationBadge()->__toString());
-
-        $accommodation->setReputation(799);
-        $this->assertEquals("yellow", $accommodation->getReputationBadge()->__toString());
-    }
-
-    public function testGetReputationBadge_ShouldReturnGreenColor_WhenReputationIsBiggerThen799()
-    {
-        $accommodation = new Accommodation();
-
-        $accommodation->setReputation(800);
-        $this->assertEquals("green", $accommodation->getReputationBadge()->__toString());
-
-        $accommodation->setReputation(900);
-        $this->assertEquals("green", $accommodation->getReputationBadge()->__toString());
+        $this->assertInstanceOf(ReputationBadge::class, $accommodation->getReputationBadge());
     }
 
     public function testGetReputationBadge_ShouldThrowException_WhenReputationIsNull()
