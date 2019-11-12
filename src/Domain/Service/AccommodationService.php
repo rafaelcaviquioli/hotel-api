@@ -37,10 +37,10 @@ class AccommodationService
             ->setReputation((int) $content["reputation"])
             ->setRating((int) $content["rating"]);
 
-        $this->accommodationRepository->create($accommodation);
+        $accommodationCreated = $this->accommodationRepository->create($accommodation);
 
         $viewModel = new AccommodationViewModel();
-        $viewModel->parseOne($accommodation);
+        $viewModel->parseOne($accommodationCreated);
 
         return $viewModel;
     }

@@ -39,9 +39,11 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function create(Accommodation $accommodation)
+    public function create(Accommodation $accommodation) : Accommodation
     {
         $this->_em->persist($accommodation);
         $this->_em->flush();
+
+        return $accommodation;
     }
 }

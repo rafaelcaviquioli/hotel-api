@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Domain\ObjectValue;
 
 use App\Domain\ObjectValue\ReputationBadge;
 use Exception;

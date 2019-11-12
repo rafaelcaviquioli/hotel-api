@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Domain\Entity;
 
 use Exception;
 use App\Domain\Constant\Category;
