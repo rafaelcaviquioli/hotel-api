@@ -2,10 +2,12 @@
 
 namespace App\Tests\Domain\Entity;
 
+use App\CrossCutting\Exception\ValidationEntityException;
 use Exception;
 use App\Domain\Constant\Category;
 use App\Domain\Entity\Accommodation;
 use App\Domain\ObjectValue\ReputationBadge;
+use App\Tests\Helper\Mother\AccommodationMother;
 use PHPUnit\Framework\TestCase;
 
 class AccommodationTest extends TestCase
@@ -135,5 +137,26 @@ class AccommodationTest extends TestCase
 
         $nameWithNineCharacteres = "Hyatt Rege";
         $accommodation->setName($nameWithNineCharacteres);
+    }
+
+    public function testBook_ShouldReduceTheAccommodationAvailability_WhenThereIsAvailability()
+    {
+        $accommodation = AccommodationMother::getAvailableAccommodation(3);
+
+        $accommodation->book();
+        $this->assertEquals(2, $accommodation->getAvailability());
+
+        $accommodation->book();
+        $this->assertEquals(1, $accommodation->getAvailability());
+
+        $accommodation->book();
+        $this->assertEquals(0, $accommodation->getAvailability());
+    }
+    public function testBook_ShouldThrowValidationException_WhenThereIsNoAvailability()
+    {
+        $this->expectException(ValidationEntityException::class);
+
+        $accommodation = AccommodationMother::getUnavailableAccommodation();
+        $accommodation->book();
     }
 }

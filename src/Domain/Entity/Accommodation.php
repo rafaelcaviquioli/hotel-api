@@ -196,4 +196,20 @@ class Accommodation
 
         return new ReputationBadge($this->reputation);
     }
+
+    public function isAvailable(): bool
+    {
+        return $this->availability > 0;
+    }
+
+    public function book(): self
+    {
+        if (!$this->isAvailable()) {
+            throw new ValidationEntityException("This accommodation there is no availability.");
+        }
+
+        $this->availability = $this->availability - 1;
+
+        return $this;
+    }
 }

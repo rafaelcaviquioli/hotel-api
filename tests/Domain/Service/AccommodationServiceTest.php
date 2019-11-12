@@ -49,7 +49,7 @@ class AccommodationServiceTest extends TestCase
         $accommodationRepositoryMock
             ->expects($this->once())
             ->method('create')
-            ->will($this->returnCallback(function($accommodation) {
+            ->will($this->returnCallback(function ($accommodation) {
                 return $accommodation;
             }));
 
