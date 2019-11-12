@@ -166,7 +166,7 @@ class Accommodation
         return $this;
     }
 
-    public function setEvaluate(int $rating): self
+    public function setRating(int $rating): self
     {
         if ($rating < 0 || $rating > 5) {
             throw new ValidationEntityException("The evaluate rating is invalid");

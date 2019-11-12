@@ -9,30 +9,30 @@ use PHPUnit\Framework\TestCase;
 
 class AccommodationTest extends TestCase
 {
-    public function testSetEvaluate_ShouldEvaluateWithSuccessful_WhenRatingIsBiggerOrEqualThenZeroAndLesserOsEqualThenFive()
+    public function testsetRating_ShouldEvaluateWithSuccessful_WhenRatingIsBiggerOrEqualThenZeroAndLesserOsEqualThenFive()
     {
         $rating = 3;
         $accommodation = new Accommodation();
-        $accommodation->setEvaluate($rating);
+        $accommodation->setRating($rating);
         $this->assertEquals($rating, $accommodation->getRating());
     }
 
-    public function testSetEvaluate_ShouldNotEvaluateAndThrowException_WhenRatingIsBiggerThenFive()
+    public function testsetRating_ShouldNotEvaluateAndThrowException_WhenRatingIsBiggerThenFive()
     {
         $this->expectException(Exception::class);
 
         $rating = 6;
         $accommodation = new Accommodation();
-        $accommodation->setEvaluate($rating);
+        $accommodation->setRating($rating);
     }
 
-    public function testSetEvaluate_ShouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
+    public function testsetRating_ShouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
     {
         $this->expectException(Exception::class);
 
         $rating = -1;
         $accommodation = new Accommodation();
-        $accommodation->setEvaluate($rating);
+        $accommodation->setRating($rating);
     }
 
     public function testSetCategory_ShouldThrowException_WhenCategorySettedIsNotValid()
