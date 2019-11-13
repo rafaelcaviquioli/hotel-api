@@ -4,7 +4,7 @@ namespace App\Domain\Entity;
 
 use App\CrossCutting\Exception\ValidationEntityException;
 use Doctrine\ORM\Mapping as ORM;
-use App\Domain\Constant\Category;
+use App\Domain\BusinessConstraint\AccommodationBusinessConstraint;
 use App\Domain\ObjectValue\ReputationBadge;
 
 /**
@@ -77,16 +77,8 @@ class Accommodation
 
     public function setName(string $name): self
     {
-        if (strlen($name) <= 10) {
-            throw new ValidationEntityException("The accommodation name should be longer than 10 characters.");
-        }
-
-        $forbidenWords =  ["Free", "Offer", "Book", "Website"];
-        foreach ($forbidenWords as $word) {
-            if (stripos($name, $word) > -1) {
-                throw new ValidationEntityException("Was not possible set accommodation name because '$name' is a forbiden word.");
-            }
-        }
+        AccommodationBusinessConstraint::validateNameLength($name);
+        AccommodationBusinessConstraint::validateForbidenName($name);
 
         $this->name = $name;
 
@@ -151,9 +143,7 @@ class Accommodation
 
     public function setImage(string $imageUrl): self
     {
-        if (filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
-            throw new ValidationEntityException("The image url '$imageUrl' is not a valid URL");
-        }
+        AccommodationBusinessConstraint::validateImageUrl($imageUrl);
 
         $this->image = $imageUrl;
 
@@ -162,9 +152,7 @@ class Accommodation
 
     public function setCategory($category): self
     {
-        if (!Category::validateCategory($category)) {
-            throw new ValidationEntityException("The category '$category' is invalid");
-        }
+        AccommodationBusinessConstraint::validateCategory($category);
 
         $this->category = $category;
 
@@ -173,9 +161,7 @@ class Accommodation
 
     public function setRating(int $rating): self
     {
-        if ($rating < 0 || $rating > 5) {
-            throw new ValidationEntityException("The evaluate rating is invalid");
-        }
+        AccommodationBusinessConstraint::validateRating($rating);
 
         $this->rating = $rating;
 
@@ -184,9 +170,7 @@ class Accommodation
 
     public function setReputation(int $reputation): self
     {
-        if ($reputation < 0 || $reputation > 1000) {
-            throw new ValidationEntityException("The reputation is invalid");
-        }
+        AccommodationBusinessConstraint::validateReputation($reputation);
 
         $this->reputation = $reputation;
 
@@ -202,16 +186,9 @@ class Accommodation
         return new ReputationBadge($this->reputation);
     }
 
-    public function isAvailable(): bool
-    {
-        return $this->availability > 0;
-    }
-
     public function book(): self
     {
-        if (!$this->isAvailable()) {
-            throw new ValidationEntityException("Accommodation is not availability.");
-        }
+        AccommodationBusinessConstraint::validateIsAvailability($this->availability);
 
         $this->availability = $this->availability - 1;
 

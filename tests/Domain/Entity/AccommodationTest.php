@@ -4,7 +4,6 @@ namespace App\Tests\Domain\Entity;
 
 use App\CrossCutting\Exception\ValidationEntityException;
 use Exception;
-use App\Domain\Constant\Category;
 use App\Domain\Entity\Accommodation;
 use App\Domain\ObjectValue\ReputationBadge;
 use App\Tests\Helper\Mother\AccommodationMother;
@@ -48,7 +47,7 @@ class AccommodationTest extends TestCase
 
     public function testSetCategory_ShouldSetCategory_WhenCategorySettedIsValid()
     {
-        $category = Category::EXISTENT_CATEGORIES["hotel"];
+        $category = "hotel";
         $accommodation = new Accommodation();
         $accommodation->setCategory($category);
         $this->assertEquals($category, $accommodation->getCategory());
