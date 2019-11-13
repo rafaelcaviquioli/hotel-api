@@ -6,10 +6,6 @@ use App\Domain\Entity\Accommodation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-/**
- * @method Accommodation|null findOneById(int $id)
- * @method Accommodation[] findAll()
- */
 class AccommodationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -17,9 +13,6 @@ class AccommodationRepository extends ServiceEntityRepository
         parent::__construct($registry, Accommodation::class);
     }
 
-    /**
-     * @return Accommodation[] Returns an array of Accommodation objects
-     */
     public function findAll()
     {
         return $this->createQueryBuilder('a')
@@ -28,9 +21,6 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @return Accommodation Returns a Accommodation object
-     */
     public function findOneById(int $id): ?Accommodation
     {
         return $this->createQueryBuilder('a')
@@ -55,6 +45,12 @@ class AccommodationRepository extends ServiceEntityRepository
     public function update(Accommodation $accommodation): void
     {
         $this->_em->persist($accommodation);
+        $this->_em->flush();
+    }
+
+    public function delete(Accommodation $accommodation): void
+    {
+        $this->_em->remove($accommodation);
         $this->_em->flush();
     }
 }

@@ -21,7 +21,7 @@ class AccommodationTest extends TestCase
 
     public function testsetRating_ShouldNotEvaluateAndThrowException_WhenRatingIsBiggerThenFive()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $rating = 6;
         $accommodation = new Accommodation();
@@ -30,7 +30,7 @@ class AccommodationTest extends TestCase
 
     public function testsetRating_ShouldNotEvaluateAndThrowException_WhenRatingIsLesserThenZero()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $rating = -1;
         $accommodation = new Accommodation();
@@ -39,7 +39,7 @@ class AccommodationTest extends TestCase
 
     public function testSetCategory_ShouldThrowException_WhenCategorySettedIsNotValid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $accommodation = new Accommodation();
         $accommodation->setCategory("nonExistentCategory");
@@ -55,7 +55,7 @@ class AccommodationTest extends TestCase
 
     public function testSetImage_ShouldThrowException_WhenImageIsNotAValidUrl()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $accommodation = new Accommodation();
         $accommodation->setImage("thisIsNotAnUrl");
@@ -79,7 +79,7 @@ class AccommodationTest extends TestCase
 
     public function testSetReputation_ShouldThrowException_WhenReputationIsBiggerThenOneThousand()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $reputation = 1001;
         $accommodation = new Accommodation();
@@ -88,7 +88,7 @@ class AccommodationTest extends TestCase
 
     public function testSetReputation_ShouldThrowException_WhenReputationIsLesserThenZero()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
 
         $reputation = -1;
         $accommodation = new Accommodation();
@@ -106,19 +106,19 @@ class AccommodationTest extends TestCase
 
     public function testGetReputationBadge_ShouldThrowException_WhenReputationIsNull()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
         $accommodation = new Accommodation();
         $this->assertNull($accommodation->getReputationBadge());
     }
 
     public function testSetName_ShouldThrowException_WhenHaveForbiddenWordsLikeFree(){
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
         $accommodation = new Accommodation();
         $accommodation->setName("A great accommodation with free wifi");
     }
 
     public function testSetName_ShouldThrowException_WhenHaveNotForbiddenWordsLikeOffer(){
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
         $accommodation = new Accommodation();
         $accommodation->setName("This is a good offer near of the beach");
     }
@@ -131,7 +131,7 @@ class AccommodationTest extends TestCase
     }
 
     public function testSetName_ShouldThrowException_WhenNameIsNotLongerThan10Characters(){
-        $this->expectException(Exception::class);
+        $this->expectException(ValidationEntityException::class);
         $accommodation = new Accommodation();
 
         $nameWithNineCharacteres = "Hyatt Rege";

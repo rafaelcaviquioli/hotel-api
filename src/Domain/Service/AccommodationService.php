@@ -59,4 +59,15 @@ class AccommodationService
 
         return $accommodation;
     }
+
+    public function delete(int $accommodationId): void
+    {
+        $accommodation = $this->accommodationRepository->findOneById($accommodationId);
+
+        if ($accommodation == null) {
+            throw new ResourceNotFoundException("Accommodation id '$accommodationId' was not found.");
+        }
+
+        $this->accommodationRepository->delete($accommodation);
+    }
 }

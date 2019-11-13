@@ -129,4 +129,43 @@ class AccommodationServiceTest extends TestCase
         $this->expectException(ValidationEntityException::class);
         $accommodationService->book($accommodation->getId());
     }
+
+    public function testDelete_ShouldCallDeleteAccommodation_WhenAccommodationIsFound()
+    {
+        $accommodation = AccommodationMother::getAvailableAccommodation(10, 1);
+
+        $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with($accommodation->getId())
+            ->will($this->returnValue($accommodation));
+
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('delete')
+            ->with($accommodation);
+
+        $accommodationService = new AccommodationService($accommodationRepositoryMock);
+        $accommodationService->delete($accommodation->getId());
+    }
+
+    public function testDelete_ShouldThrowResourceNotFoundException_WhenRequestedAccommodationDontExists()
+    {
+        $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('findOneById')
+            ->will($this->returnValue(null));
+
+        $accommodationRepositoryMock
+            ->expects($this->never())
+            ->method('delete');
+
+        $accommodationService = new AccommodationService($accommodationRepositoryMock);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $accommodationId = 999;
+        $accommodationService->delete($accommodationId);
+    }
 }

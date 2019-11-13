@@ -129,4 +129,17 @@ class AccomodationController extends AbstractController
             'availability' => $accommodation->getAvailability()
         ], Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/{id}", methods={"DELETE"})
+     * @SWG\Parameter(name="id", in="path", type="integer", description="Accommodation Id")
+     * @SWG\Response(response=200, description="Accommodation deleted")
+     * @SWG\Response(response=404, description="Accommodation was not found")
+     */
+    public function delete(int $id): Response
+    {
+        $this->accommodationService->delete($id);
+
+        return new Response(null, Response::HTTP_OK);
+    }
 }
