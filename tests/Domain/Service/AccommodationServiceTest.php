@@ -2,17 +2,17 @@
 
 namespace App\Tests\Domain\Service;
 
+use App\CrossCutting\Exception\ResourceNotFoundException;
 use App\CrossCutting\Exception\ValidationEntityException;
 use App\Domain\Service\AccommodationService;
 use App\Infrastructure\Repository\AccommodationRepository;
+use App\Tests\Helper\Mother\AccommodationMother;
 use PHPUnit\Framework\TestCase;
 
 class AccommodationServiceTest extends TestCase
 {
     public function testInsert_ShouldThrowValidationEntityException_WhenCreateAccommodationWithInvalidContent()
     {
-        $this->expectException(ValidationEntityException::class);
-
         $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
         $accommodationService = new AccommodationService($accommodationRepositoryMock);
         $content = [
@@ -24,6 +24,8 @@ class AccommodationServiceTest extends TestCase
             'availability' => '', 'image' => '',
             'reputation' => '', 'rating' => '',
         ];
+
+        $this->expectException(ValidationEntityException::class);
         $accommodationService->createAccommodation($content);
     }
 
@@ -67,5 +69,64 @@ class AccommodationServiceTest extends TestCase
         $this->assertEquals($content['location']['country'], $viewModel->location->country);
         $this->assertEquals($content['location']['address'], $viewModel->location->address);
         $this->assertEquals($content['location']['zip_code'], $viewModel->location->zip_code);
+    }
+
+    public function testBook_ShouldThrowResourceNotFoundException_WhenRequestedAccommodationDontExists()
+    {
+        $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('findOneById')
+            ->will($this->returnValue(null));
+
+        $accommodationService = new AccommodationService($accommodationRepositoryMock);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $accommodationId = 999;
+        $accommodationService->book($accommodationId);
+    }
+
+    public function testBook_ShouldPersistBook_WhenAccommodationIsBooked()
+    {
+        $accommodation = AccommodationMother::getAvailableAccommodation(10, 1);
+
+        $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with($accommodation->getId())
+            ->will($this->returnValue($accommodation));
+
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('update')
+            ->with($accommodation);
+
+        $accommodationService = new AccommodationService($accommodationRepositoryMock);
+        $bookedAccommodation = $accommodationService->book($accommodation->getId());
+
+        $this->assertEquals(9, $bookedAccommodation->getAvailability(), "Because one accommodation was booked");
+    }
+
+    public function testBook_ShouldThrowValidationException_WhenThereIsNoAvailability()
+    {
+        $accommodation = AccommodationMother::getUnavailableAccommodation(1);
+
+        $accommodationRepositoryMock = $this->createMock(AccommodationRepository::class);
+        $accommodationRepositoryMock
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with($accommodation->getId())
+            ->will($this->returnValue($accommodation));
+
+        $accommodationRepositoryMock
+            ->expects($this->never())
+            ->method('update')
+            ->with($accommodation);
+
+        $accommodationService = new AccommodationService($accommodationRepositoryMock);
+
+        $this->expectException(ValidationEntityException::class);
+        $accommodationService->book($accommodation->getId());
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Entity\Accommodation;
@@ -39,11 +40,21 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function create(Accommodation $accommodation) : Accommodation
+    public function create(Accommodation $accommodation): Accommodation
     {
+        if ($accommodation->getId() != null) {
+            throw new Exception("Was not possible create a accommodation because the entity already exists with id '{$accommodation->getId()}'");
+        }
+
         $this->_em->persist($accommodation);
         $this->_em->flush();
 
         return $accommodation;
+    }
+
+    public function update(Accommodation $accommodation): void
+    {
+        $this->_em->persist($accommodation);
+        $this->_em->flush();
     }
 }

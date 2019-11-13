@@ -152,6 +152,7 @@ class AccommodationTest extends TestCase
         $accommodation->book();
         $this->assertEquals(0, $accommodation->getAvailability());
     }
+
     public function testBook_ShouldThrowValidationException_WhenThereIsNoAvailability()
     {
         $this->expectException(ValidationEntityException::class);

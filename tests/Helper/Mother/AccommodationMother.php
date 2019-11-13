@@ -7,7 +7,7 @@ use App\Domain\Entity\Location;
 
 class AccommodationMother
 {
-    private static function getValidBaseAccommodation(): Accommodation
+    private static function getValidBaseAccommodation(int $id = null): Accommodation
     {
         $location = new Location();
         $location
@@ -17,7 +17,7 @@ class AccommodationMother
             ->setZipCode(12345)
             ->setAddress("Boulevard Díaz Ordaz No. 9 Cantarranas");
 
-        $accommodation = new Accommodation();
+        $accommodation = new Accommodation($id);
         $accommodation
             ->setName("Hotel is Trivago")
             ->setRating(5)
@@ -31,17 +31,17 @@ class AccommodationMother
         return $accommodation;
     }
 
-    public static function getUnavailableAccommodation(): Accommodation
+    public static function getUnavailableAccommodation($id = null): Accommodation
     {
-        $accommodation = AccommodationMother::getValidBaseAccommodation();
+        $accommodation = AccommodationMother::getValidBaseAccommodation($id);
         $accommodation->setAvailability(0);
         
         return $accommodation;
     }
 
-    public static function getAvailableAccommodation(int $availability): Accommodation
+    public static function getAvailableAccommodation(int $availability, int $id = null): Accommodation
     {
-        $accommodation = AccommodationMother::getValidBaseAccommodation();
+        $accommodation = AccommodationMother::getValidBaseAccommodation($id);
         $accommodation->setAvailability($availability);
         
         return $accommodation;

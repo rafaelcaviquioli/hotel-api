@@ -1,21 +1,24 @@
-#### Start Application on http://localhost:8000
+# Hotel API - Coding Challenge
+
+#### 1. Start docker services
 
 ```bash
 $ docker-compose up -d
 ```
 
-#### Run unit tests
+#### 2. Apply the database migrations
 
 ```bash
-$ docker-compose run php-fpm php bin/phpunit
+$ docker-compose exec php-fpm bin/console doctrine:migrations:migrate -n
 ```
 
-#### OpenAPI Specification
+#### 3. OpenAPI Specification
 
 - [http://localhost:8000/api/doc](http://localhost:8000/api/doc)
 
-#### Open php-fpm console
+
+#### 4. Run unit tests
 
 ```bash
-$ docker-compose exec php-fpm bash
+$ docker-compose run php-fpm php bin/phpunit
 ```

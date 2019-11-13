@@ -3,6 +3,7 @@
 namespace App\Domain\Service;
 
 use App\Application\ViewModel\AccommodationViewModel;
+use App\CrossCutting\Exception\ResourceNotFoundException;
 use App\Domain\Entity\Accommodation;
 use App\Domain\Entity\Location;
 use App\Infrastructure\Repository\AccommodationRepository;
@@ -43,5 +44,19 @@ class AccommodationService
         $viewModel->parseOne($accommodationCreated);
 
         return $viewModel;
+    }
+
+    public function book(int $accommodationId): Accommodation
+    {
+        $accommodation = $this->accommodationRepository->findOneById($accommodationId);
+
+        if ($accommodation == null) {
+            throw new ResourceNotFoundException("Accommodation id '$accommodationId' was not found.");
+        }
+
+        $accommodation->book();
+        $this->accommodationRepository->update($accommodation);
+
+        return $accommodation;
     }
 }

@@ -16,8 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 
+/**
+ * @Route("/api/accommodation")
+ */
 class AccomodationController extends AbstractController
 {
     private $accommodationRepository;
@@ -32,9 +34,16 @@ class AccomodationController extends AbstractController
     }
 
     /**
-     * @Route("/api/accommodation/{id}", methods={"GET"})
+     * @Route("/{id}", methods={"GET"})
+     * @SWG\Parameter(name="id", in="path", type="integer", description="Accommodation Id")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Found accommodation",
+     *     @Model(type=AccommodationViewModel::class)
+     * )
+     * @SWG\Response(response=404, description="Accommodation was not found")
      */
-    public function getAccommodation($id): Response
+    public function getAccommodation(int $id): Response
     {
         $accommodation = $this->accommodationRepository->findOneById($id);
 
@@ -44,11 +53,20 @@ class AccomodationController extends AbstractController
         $viewModel = new AccommodationViewModel();
         $viewModel->parseOne($accommodation);
 
-        return $this->json($viewModel);
+        return $this->json($viewModel, Response::HTTP_OK);
     }
 
     /**
-     * @Route("/api/accommodation", methods={"GET"})
+     * @Route("", methods={"GET"})
+     * @SWG\Response(response=204, description="There are no accommodations")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Found accommodations",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=AccommodationViewModel::class))
+     *     )
+     * )
      */
     public function getAccommodations(): Response
     {
@@ -60,12 +78,11 @@ class AccomodationController extends AbstractController
 
         $viewModels = AccommodationViewModel::parseList($accommodations);
 
-        return $this->json($viewModels);
+        return $this->json($viewModels, Response::HTTP_OK);
     }
 
     /**
-     * @Route("/api/accommodation", methods={"POST"})
-     * 
+     * @Route("", methods={"POST"})
      * @SWG\Parameter(
      *     name="accommodation",
      *     in="body",
@@ -73,13 +90,13 @@ class AccomodationController extends AbstractController
      *     required=true,
      *     @Model(type=AccommodationPayload::class)
      * )
-     * 
      * @SWG\Response(
      *     response=201,
      *     description="Accommodation created",
      *     @Model(type=AccommodationViewModel::class)
      * )
-     * */
+     * @SWG\Response(response=400, description="Bad request")
+     */
     public function createAccommodation(Request $request)
     {
         $content = json_decode($request->getContent(), true);
@@ -88,5 +105,28 @@ class AccomodationController extends AbstractController
             ->createAccommodation($content);
 
         return $this->json($accommodationViewModel, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Route("/{id}/book", methods={"PUT"})
+     * @SWG\Parameter(name="id", in="path", type="integer", description="Accommodation Id")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Accommodation booked",
+     *     @SWG\Schema(
+     *         type="object",
+     *         @SWG\Property(property="availability", type="integer")
+     *     )
+     * )
+     * @SWG\Response(response=400, description="Accommodation is not availability")
+     * @SWG\Response(response=404, description="Accommodation was not found")
+     */
+    public function book(int $id): Response
+    {
+        $accommodation = $this->accommodationService->book($id);
+
+        return $this->json([
+            'availability' => $accommodation->getAvailability()
+        ], Response::HTTP_OK);
     }
 }

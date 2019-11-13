@@ -12,6 +12,11 @@ use App\Domain\ObjectValue\ReputationBadge;
  */
 class Accommodation
 {
+    public function __construct(int $id = null)
+    {
+        $this->id = $id;
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -205,7 +210,7 @@ class Accommodation
     public function book(): self
     {
         if (!$this->isAvailable()) {
-            throw new ValidationEntityException("This accommodation there is no availability.");
+            throw new ValidationEntityException("Accommodation is not availability.");
         }
 
         $this->availability = $this->availability - 1;
