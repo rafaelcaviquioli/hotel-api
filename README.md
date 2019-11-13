@@ -36,9 +36,3 @@ $ docker-compose run --rm php-fpm bin/console doctrine:migrations:migrate -n
 ```bash
 $ docker-compose run --rm php-fpm php bin/phpunit
 ```
-
-#### 7. Run Phpstan
-
-```bash
-$ docker-compose run --rm php-fpm vendor/bin/phpstan analyse src
-```
