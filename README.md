@@ -1,5 +1,7 @@
 # Hotel API - Coding Challenge
 
+[Repository available on Gitlab: https://gitlab.com/rafaelcaviquioli/hotel-api](https://gitlab.com/rafaelcaviquioli/hotel-api)
+
 #### 1. Start docker services
 
 ```bash
