@@ -8,6 +8,7 @@ use App\Application\ViewModel\AccommodationViewModel;
 use App\Application\ViewModel\AccommodationPayload;
 use App\Domain\Entity\Accommodation;
 use App\Domain\Entity\Location;
+use App\Application\Filter\AccommodationFilter;
 use App\Domain\Service\AccommodationService;
 use App\Infrastructure\Repository\AccommodationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,10 +68,23 @@ class AccomodationController extends AbstractController
      *         @SWG\Items(ref=@Model(type=AccommodationViewModel::class))
      *     )
      * )
+     * @SWG\Parameter(name="rating", type="integer", in="query")
+     * @SWG\Parameter(name="availabilityMoreThan", type="integer", in="query")
+     * @SWG\Parameter(name="availabilityLessThan", type="integer", in="query")
+     * @SWG\Parameter(name="category", type="string", in="query")
      */
-    public function getAccommodations(): Response
+    public function getAccommodations(Request $request): Response
     {
-        $accommodations = $this->accommodationRepository->findAll();
+        $accommodationFilter = new AccommodationFilter(
+            $request->query->get('rating'),
+            $request->query->get('city'),
+            $request->query->get('reputationBadge'),
+            $request->query->get('availabilityMoreThan'),
+            $request->query->get('availabilityLessThan'),
+            $request->query->get('category')
+        );
+
+        $accommodations = $this->accommodationRepository->findWithFilters($accommodationFilter);
 
         if ($accommodations == null) {
             throw new NoContentException();

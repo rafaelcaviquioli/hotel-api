@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Repository;
 
+use App\Application\Filter\AccommodationFilter;
 use App\Domain\Entity\Accommodation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -13,10 +14,33 @@ class AccommodationRepository extends ServiceEntityRepository
         parent::__construct($registry, Accommodation::class);
     }
 
-    public function findAll()
+    public function findWithFilters(AccommodationFilter $accommodationFilter)
     {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.id', 'ASC')
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->orderBy('a.id', 'ASC');
+
+        if ($accommodationFilter->getRating() != null) {
+            $queryBuilder
+                ->andWhere('a.rating = :rating')
+                ->setParameter('rating', $accommodationFilter->getRating());
+        }
+        if ($accommodationFilter->getAvailabilityMoreThan() != null) {
+            $queryBuilder
+                ->andWhere('a.availability >= :availabilityMoreThan')
+                ->setParameter('availabilityMoreThan', $accommodationFilter->getAvailabilityMoreThan());
+        }
+        if ($accommodationFilter->getAvailabilityLessThan() != null) {
+            $queryBuilder
+                ->andWhere('a.availability <= :availabilityLessThan')
+                ->setParameter('availabilityLessThan', $accommodationFilter->getAvailabilityLessThan());
+        }
+        if ($accommodationFilter->getCategory() != null) {
+            $queryBuilder
+                ->andWhere('a.category = :category')
+                ->setParameter('category', $accommodationFilter->getCategory());
+        }
+
+        return $queryBuilder
             ->getQuery()
             ->getResult();
     }
