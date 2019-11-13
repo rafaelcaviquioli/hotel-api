@@ -2,7 +2,7 @@
 
 [Repository available on Gitlab: https://gitlab.com/rafaelcaviquioli/hotel-api](https://gitlab.com/rafaelcaviquioli/hotel-api)
 
-#### 1. Install composer dependencies
+#### 1. Build PHP Docker Image
 
 ```bash
 $ docker-compose build
