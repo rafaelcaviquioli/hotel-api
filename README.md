@@ -5,34 +5,40 @@
 #### 1. Install composer dependencies
 
 ```bash
-$ docker-compose exec php-fpm composer install
+$ docker-compose build
 ```
 
-#### 2. Start docker services
+#### 2. Install composer dependencies
+
+```bash
+$ docker-compose run --rm php-fpm composer install
+```
+
+#### 3. Start docker services
 
 ```bash
 $ docker-compose up -d
 ```
 
-#### 3. Apply the database migrations
+#### 4. Apply the database migrations
 
 ```bash
-$ docker-compose exec php-fpm bin/console doctrine:migrations:migrate -n
+$ docker-compose run --rm php-fpm bin/console doctrine:migrations:migrate -n
 ```
 
-#### 4. OpenAPI Specification
+#### 5. OpenAPI Specification
 
 - [http://localhost:8000/api/doc](http://localhost:8000/api/doc)
 
 
-#### 5. Run unit tests
+#### 6. Run unit tests
 
 ```bash
-$ docker-compose run php-fpm php bin/phpunit
+$ docker-compose run --rm php-fpm php bin/phpunit
 ```
 
-#### 6. Run Phpstan
+#### 7. Run Phpstan
 
 ```bash
-$ docker-compose run php-fpm vendor/bin/phpstan analyse src
+$ docker-compose run --rm php-fpm vendor/bin/phpstan analyse src
 ```
